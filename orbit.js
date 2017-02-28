@@ -4,20 +4,17 @@ var Orbit = function(x, y, r, n, p) {
     this.r = r;
     this.angle = 0;
     this.n = n;
-    this.speed = geometry.radians(Math.pow(k, n - 1)) / 10;
+    this.speed = geometry.radians(Math.pow(k, n - 1)) / 30;
     this.parent = p || null;
     this.child = null;
 };
 
 Orbit.prototype.show = function() {
-    geometry.stroke(255);
-    geometry.strokeWeight(1);
-    geometry.noFill();
     geometry.ellipse(this.x, this.y, this.r * 2, this.r * 2);
 };
 
 Orbit.prototype.addChild = function() {
-    var newRadius = this.r / 3;
+    var newRadius = this.r / decrement;
     var newX = this.x + this.r + newRadius;
     var newY = this.y;
     this.child = new Orbit(newX, newY, newRadius, this.n + 1, this);

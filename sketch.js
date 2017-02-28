@@ -1,12 +1,14 @@
 var r = 100;
 var x, y;
-var k = -4;
+var k = -7;
 var angle = 0;
 var looping = true;
 var showGeometry = true;
 var path = [];
 var sun;
 var end;
+var prev;
+var decrement = 5;
 
 var sketch = new p5(function(p) {
     p.setup = function() {
@@ -14,6 +16,10 @@ var sketch = new p5(function(p) {
         p.canvas.addClass('one');
         p.background(50);
         p.frameRate(30);
+        // p.noStroke();
+        p.noFill();
+        // p.stroke(255, 150);
+        // p.strokeWeight(0.5);
         p.noStroke();
     }
     p.draw = function() {}
@@ -39,7 +45,21 @@ var sketch = new p5(function(p) {
             }
         }
         if (p.key == 'q' || p.key == 'Q') {
-            sketch.background(0);
+            sketch.background(51);
+        }
+        if (p.key == 'w' || p.key == 'W') {
+            var current = sun;
+            decrement -= 0.1;
+            k -= 0.1;
+            while (current) {
+                // current.update();
+                // current.show();
+                if (current.parent) {
+                    current.r = current.parent.r / decrement;;
+                }
+                current = current.child;
+
+            }
         }
     }
 });
@@ -51,12 +71,14 @@ var geometry = new p5(function(p) {
         p.frameRate(30);
         sun = new Orbit(p.width / 2, p.height / 2, 200, 0, null);
         sun.addChild();
-
         var next = sun;
         for (var i = 0; i < 10; i++) {
             next = next.addChild();
         }
         end = next;
+        p.stroke(255);
+        p.strokeWeight(1);
+        p.noFill();
     }
     p.draw = function() {
         for (var i = 0; i < 20; i++) {
@@ -67,7 +89,29 @@ var geometry = new p5(function(p) {
                 current.show();
                 current = current.child;
             }
-            sketch.ellipse(end.x, end.y, 2, 2);
+            // if (prev) {
+            //     sketch.line(end.x, end.y, prev.x, prev.y);
+            // }
+            for (var ii = 0; ii < 10; ii++) {
+                var mapSize = p.map(ii, 0, 10, 10, 0.01);
+                var mapAlpha = p.map(ii, 0, 10, 0, 255);
+                sketch.fill(155, p.map(k, -7, -11, 255, 0), 50, mapAlpha / 10);
+                sketch.ellipse(end.x, end.y, mapSize, mapSize);
+                prev = p.createVector(end.x, end.y);
+            }
+
+            var current = sun;
+            decrement -= 0.0001;
+            k -= 0.0001;
+            while (current) {
+                // current.update();
+                // current.show();
+                if (current.parent) {
+                    current.r = current.parent.r / decrement;;
+                }
+                current = current.child;
+
+            }
         }
     }
 });
